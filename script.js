@@ -1,4 +1,6 @@
 const counterBtn = document.getElementById('counter');
+const resetBtn = document.getElementById('reset');
+const setBtn = document.getElementById('setcount');
 const STORAGE_KEY = 'malaCount';
 
 let count = 0;
@@ -19,4 +21,25 @@ counterBtn.addEventListener('click', function () {
     count = count + 1;
     render();
 });
+
+resetBtn.addEventListener('click', function () {
+    if (count === 0) return;
+    if (confirm('Reset the count to 0?')) {
+        count = 0;
+        render();
+    }
+});
+
+setBtn.addEventListener('click', function () {
+    const input = prompt('Enter the current count:', count);
+    if (input === null) return; // cancelled
+    const value = parseInt(input.trim(), 10);
+    if (isNaN(value) || value < 0) {
+        alert('Please enter a number like 22356');
+        return;
+    }
+    count = value;
+    render();
+});
+
 render();

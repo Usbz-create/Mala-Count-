@@ -77,3 +77,8 @@ h1 {
 .reset:hover {
     background: #e4eaf6;
 }
+
+.actions {
+    display: flex;
+    gap: 12px;
+}
