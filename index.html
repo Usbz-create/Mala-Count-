@@ -17,5 +17,17 @@
             <button id="reset" class="reset">Reset</button>
         </div>
     </main>
+
+    <div id="overlay" class="overlay" hidden>
+        <div class="modal" role="dialog" aria-modal="true">
+            <p id="modalText"></p>
+            <input id="modalInput" type="number" inputmode="numeric" min="0" step="1">
+            <p id="modalError" class="error"></p>
+            <div class="actions">
+                <button id="modalCancel" class="reset">Cancel</button>
+                <button id="modalOk" class="primary">OK</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
