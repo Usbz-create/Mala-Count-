@@ -37,8 +37,10 @@ function openModal(newMode) {
     }
     overlay.hidden = false;
     if (mode === 'set') {
-        modalInput.focus();
-        modalInput.select();
+        try {
+            modalInput.focus();
+            modalInput.select();
+        } catch (e) {}
     }
 }
 

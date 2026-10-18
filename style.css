@@ -144,3 +144,9 @@ h1 {
     font-size: 15px;
     cursor: pointer;
 }
+
+.version {
+    margin: 0;
+    font-size: 11px;
+    color: #a0abc4;
+}
