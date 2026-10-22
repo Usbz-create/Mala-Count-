@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mala Counter</title>
-    <link rel="stylesheet" href="style.css?v=4">
-    <script src="script.js?v=4" defer></script>
+    <link rel="stylesheet" href="style.css?v=5">
+    <script src="script.js?v=5" defer></script>
 </head>
 <body>
     <main>
         <h1>Mala Counter</h1>
 
         <button id="counter" class="counter" aria-label="Tap to count">0</button>
-        <p class="hint">This session &middot; tap the circle to count</p>
+        <p class="hint">This session &middot; tap the circle for each mala</p>
 
         <div class="actions">
             <button id="save" class="primary">Save</button>
@@ -28,11 +28,9 @@
             <div class="bar"><div id="bar" class="bar-fill"></div></div>
 
             <dl class="stats">
-                <div><dt>Total beads</dt><dd id="statTotal">0</dd></div>
-                <div><dt>Malas done</dt><dd id="statDone">0</dd></div>
+                <div><dt>Total malas</dt><dd id="statTotal">0</dd></div>
                 <div><dt>Target</dt><dd id="statTarget">0</dd></div>
                 <div><dt>Malas left</dt><dd id="statLeft">0</dd></div>
-                <div><dt>Beads left</dt><dd id="statBeadsLeft">0</dd></div>
                 <div><dt>Time left</dt><dd id="statTime">0</dd></div>
             </dl>
         </section>
@@ -41,7 +39,7 @@
             <button id="setTotal" class="reset">Set total</button>
             <button id="setTarget" class="reset">Set target</button>
         </div>
-        <p class="version">v4</p>
+        <p class="version">v5</p>
     </main>
 
     <div id="overlay" class="overlay" hidden>
