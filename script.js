@@ -1,10 +1,9 @@
 // ---- Settings you can change ----
-const BEADS_PER_MALA = 108;     // only used once, to convert old bead counts to malas
+const BEADS_PER_MALA = 108;
 const SECONDS_PER_MALA = 180;   // used for the "time left" estimate
-const DEFAULT_TARGET = 1200;    // in malas
+const DEFAULT_TARGET = 1200;    // in malas (1200 malas = 129,600 beads)
 
-// v5 stores malas. Old keys (v3/v4) stored beads and are only read for the one-time conversion.
-const KEYS = { saved: 'malaSavedM', session: 'malaSessionM', target: 'malaTarget' };
+const KEYS = { saved: 'malaSaved', session: 'malaSession', target: 'malaTarget' };
 
 const $ = (id) => document.getElementById(id);
 const counterBtn = $('counter');
@@ -23,17 +22,11 @@ function write(key, value) {
     try { localStorage.setItem(key, value); } catch (e) {}
 }
 
-// saved   = malas counted in earlier sessions
-// session = malas counted since this page was opened
+// saved   = everything counted in earlier sessions
+// session = what is counted since this page was opened
 let saved = read(KEYS.saved);
+if (saved === null) saved = read('malaCount') || 0; // carry over the count from v3
 let session = read(KEYS.session) || 0;
-
-if (saved === null) {
-    // First time on v5: convert the old bead total into whole malas
-    const oldBeads = (read('malaSaved') !== null ? read('malaSaved') : (read('malaCount') || 0))
-                   + (read('malaSession') || 0);
-    saved = Math.floor(oldBeads / BEADS_PER_MALA);
-}
 let target = read(KEYS.target) || DEFAULT_TARGET;
 
 // Starting fresh: last visit's session is added to the total
@@ -45,8 +38,14 @@ write(KEYS.session, session);
 let mode = null;
 let statusTimer = null;
 
-function timeText(malas) {
-    const totalMin = Math.round(malas * SECONDS_PER_MALA / 60);
+function malasText(beads) {
+    const m = Math.floor(beads / BEADS_PER_MALA);
+    const r = beads % BEADS_PER_MALA;
+    return r === 0 ? m + ' malas' : m + ' malas + ' + r + ' beads';
+}
+
+function timeText(beads) {
+    const totalMin = Math.round((beads / BEADS_PER_MALA) * SECONDS_PER_MALA / 60);
     const h = Math.floor(totalMin / 60);
     const m = totalMin % 60;
     return h === 0 ? m + ' min' : h + ' h ' + m + ' min';
@@ -54,13 +53,16 @@ function timeText(malas) {
 
 function render() {
     const total = saved + session;
-    const left = Math.max(0, target - total);
-    const pct = Math.min(100, (total / target) * 100);
+    const targetBeads = target * BEADS_PER_MALA;
+    const left = Math.max(0, targetBeads - total);
+    const pct = Math.min(100, (total / targetBeads) * 100);
 
     counterBtn.textContent = session;
     $('statTotal').textContent = total.toLocaleString();
-    $('statTarget').textContent = target.toLocaleString();
-    $('statLeft').textContent = left === 0 ? 'Target reached' : left.toLocaleString();
+    $('statDone').textContent = malasText(total);
+    $('statTarget').textContent = target.toLocaleString() + ' malas';
+    $('statLeft').textContent = left === 0 ? 'Target reached' : malasText(left);
+    $('statBeadsLeft').textContent = left.toLocaleString();
     $('statTime').textContent = left === 0 ? '0 min' : timeText(left);
     $('bar').style.width = pct + '%';
     $('barText').textContent = pct.toFixed(1) + '%';
@@ -82,7 +84,7 @@ function openModal(newMode) {
     modalError.textContent = '';
     modalInput.hidden = false;
     if (mode === 'total') {
-        modalText.textContent = 'Enter the total malas counted so far';
+        modalText.textContent = 'Enter the total beads counted so far';
         modalInput.value = saved + session;
     } else if (mode === 'target') {
         modalText.textContent = 'Enter the target number of malas';
